@@ -1,9 +1,9 @@
 package com.bank.accounts.constants;
 
-public class AccountConstants {
+public class AccountsConstants {
 
 
-    private AccountConstants() {
+    private AccountsConstants() {
         // restrict instantiation
     }
     public static final String  SAVINGS = "Savings";
