@@ -3,6 +3,7 @@ package com.bank.accounts.service.impl;
 import com.bank.accounts.constants.AccountsConstants;
 import com.bank.accounts.dto.AccountsDto;
 import com.bank.accounts.dto.CustomerDto;
+import com.bank.accounts.dto.ResponseDto;
 import com.bank.accounts.entity.Accounts;
 import com.bank.accounts.entity.Customer;
 import com.bank.accounts.exception.CustomerAlreadyExistsException;
@@ -12,8 +13,12 @@ import com.bank.accounts.mapper.CustomerMapper;
 import com.bank.accounts.repository.AccountsRepository;
 import com.bank.accounts.repository.CustomerRepository;
 import com.bank.accounts.service.IAccountService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -56,6 +61,30 @@ public class AccountServiceImpl implements IAccountService {
         return customerDto;
     }
 
+    @Override
+    public boolean updateAccount(CustomerDto customerDto) {
+
+            boolean isUpdated = false;
+            AccountsDto accountsDto = customerDto.getAccountsDto();
+            if(accountsDto !=null ){
+                Accounts accounts = accountsRepository.findById(accountsDto.getAccountNumber()).orElseThrow(
+                        () -> new ResourceNotFoundException("Account", "AccountNumber", accountsDto.getAccountNumber().toString())
+                );
+                AccountMapper.mapToAccounts(accountsDto, accounts);
+                accounts = accountsRepository.save(accounts);
+
+                Long customerId = accounts.getCustomerId();
+                Customer customer = customerRepository.findById(customerId).orElseThrow(
+                        () -> new ResourceNotFoundException("Customer", "CustomerID", customerId.toString())
+                );
+                CustomerMapper.mapToCustomer(customerDto,customer);
+                customerRepository.save(customer);
+                isUpdated = true;
+            }
+            return  isUpdated;
+        }
+
+
     private Accounts createNewAccount(Customer customer) {
         Accounts newAccount = new Accounts();
         newAccount.setCustomerId(customer.getCustomerId());
@@ -68,4 +97,5 @@ public class AccountServiceImpl implements IAccountService {
         newAccount                                                                                                                                                                                          .setCreatedBy("System");
         return newAccount;
     }
+
 }

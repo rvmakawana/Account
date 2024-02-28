@@ -4,6 +4,7 @@ import com.bank.accounts.constants.AccountsConstants;
 import com.bank.accounts.dto.CustomerDto;
 import com.bank.accounts.dto.ResponseDto;
 import com.bank.accounts.service.IAccountService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,4 +36,20 @@ public class AccountsController {
               .status(HttpStatus.OK)
               .body(customerDto);
     }
+
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDto> updateAccountDetails(@Valid @RequestBody CustomerDto customerDto) {
+        boolean isUpdated = iAccountService.updateAccount(customerDto);
+        if(isUpdated) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(AccountsConstants.STATUS_200, AccountsConstants.MESSAGE_200));
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(AccountsConstants.STATUS_417, AccountsConstants.MESSAGE_417_UPDATE));
+        }
+    }
+
 }
