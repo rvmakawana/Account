@@ -34,7 +34,7 @@ public class GlobalExceptionHandler  extends ResponseEntityExceptionHandler {
         });
         return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
     }
-                                                                  )
+
 
    @ExceptionHandler(CustomerAlreadyExistsException.class)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(

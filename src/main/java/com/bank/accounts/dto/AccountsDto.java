@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class AccountsDto {
-    @Pattern(regexp = "^$[0-9]{10}", message = "Invalid mobile number")
+
     @NotEmpty(message = "Account number must not be empty or null")
     private Long accountNumber;
 
