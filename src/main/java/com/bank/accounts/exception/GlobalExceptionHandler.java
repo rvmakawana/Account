@@ -21,7 +21,20 @@ import java.util.Map;
 
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler  extends ResponseEntityExceptionHandler {
+
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request){
+        Map<String ,String> validationErrors = new HashMap<>();
+        List<ObjectError> validationErrorList = ex.getBindingResult().getAllErrors();
+        validationErrorList.forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String validationMsg = error.getDefaultMessage();
+            validationErrors.put(fieldName, validationMsg);
+        });
+        return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
+    }
+                                                                  )
 
    @ExceptionHandler(CustomerAlreadyExistsException.class)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
