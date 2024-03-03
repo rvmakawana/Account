@@ -1,12 +1,10 @@
 package com.bank.accounts.dto;
 
 import com.bank.accounts.entity.Accounts;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-@Schema(name = "Customer")
 public class CustomerDto {
 
     @NotEmpty(message = "Name cannot be empty or null" )
